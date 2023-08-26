@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Running unit tests 👷‍♂️🏗️'
+
+npm run prepush
+
+echo '🎉 No errors found! 🎉'
