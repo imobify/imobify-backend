@@ -3,9 +3,118 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  extensions = [postgis, pgcrypto]
+}
+
+model User {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+  email String @unique
+  document String @unique
+  hash String
+
+  type UserType @relation(fields: [type_id], references: [id])
+  type_id String @db.Uuid
+
+  listings RealEstateListing[]
+  leads Lead[]
+  favorites Favorite[]
+
+  @@map("user")
+}
+
+model UserType {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  type String @unique
+
+  users User[]
+
+  @@map("user_type")
+}
+
+model RealEstate {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title String
+  description String
+  address String
+  area Float
+  selling_value Float
+  renting_value Float
+  tax_value Float
+  coordinates Unsupported("geometry(Point, 4326)")
+
+  listing RealEstateListing?
+  leads Lead[]
+  favorites Favorite[]
+  photos RealEstatePhoto[]
+
+  @@index([coordinates], name: "location_idx", type: Gist)
+  @@map("real_estate")
+}
+
+model RealEstateListing {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [author_id], references: [id])
+  author_id String @db.Uuid
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate_id String @unique @db.Uuid
+
+  @@map("listing")
+}
+
+model Lead {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [author_id], references: [id])
+  author_id String @db.Uuid
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate_id String @db.Uuid
+
+  @@map("lead")
+}
+
+model Favorite {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [author_id], references: [id])
+  author_id String @db.Uuid
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate_id String @db.Uuid
+
+  @@map("favorite")
+}
+
+model RealEstatePhoto {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  photoUrl String
+
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate_id String @db.Uuid
+
+  @@map("real_estate_photo")
 }
