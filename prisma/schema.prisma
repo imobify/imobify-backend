@@ -21,6 +21,7 @@ model User {
   email String @unique
   document String @unique
   hash String
+  avatar_url String
 
   type UserType @relation(fields: [type_id], references: [id])
   type_id String @db.Uuid

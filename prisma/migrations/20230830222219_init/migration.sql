@@ -13,6 +13,7 @@ CREATE TABLE "user" (
     "email" TEXT NOT NULL,
     "document" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
+    "avatar_url" TEXT NOT NULL,
     "type_id" UUID NOT NULL,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
