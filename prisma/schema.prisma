@@ -21,10 +21,10 @@ model User {
   email String @unique
   document String @unique
   hash String
-  avatar_url String
+  avatar_url String?
 
   type UserType @relation(fields: [type_id], references: [id])
-  type_id String @db.Uuid
+  type_id Int
 
   listings RealEstateListing[]
   leads Lead[]
@@ -34,7 +34,7 @@ model User {
 }
 
 model UserType {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -13,15 +13,15 @@ CREATE TABLE "user" (
     "email" TEXT NOT NULL,
     "document" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
-    "avatar_url" TEXT NOT NULL,
-    "type_id" UUID NOT NULL,
+    "avatar_url" TEXT,
+    "type_id" INTEGER NOT NULL,
 
     CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "user_type" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "type" TEXT NOT NULL,
