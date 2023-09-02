@@ -1,4 +1,4 @@
-import { IsEmail, IsInt, IsNotEmpty, IsNumberString, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsInt, IsNotEmpty, IsNumberString, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class SignupDto {
   @IsString()
@@ -17,6 +17,8 @@ export class SignupDto {
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(8)
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)
   password: string;
 
   @IsInt()
