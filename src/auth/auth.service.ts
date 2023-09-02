@@ -34,6 +34,8 @@ export class AuthService {
 
         throw error;
       }
+
+      throw error;
     }
   }
 
