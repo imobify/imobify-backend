@@ -3,11 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 import { PrismaService } from '../shared/prisma/prisma.service';
-import { SigninDto, SignupDto } from './dto';
+import { SigninDto, SignupDto, OutputDto } from './dto';
 import { User } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-
-type OutputDto = Promise<(Omit<User, 'hash'> & { access_token: string }) | null>;
 
 @Injectable()
 export class AuthService {
