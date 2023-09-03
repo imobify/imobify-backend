@@ -1,0 +1,2 @@
+GET http://localhost:3000/api/users/me
+Authorization: Bearer < jwt token >
