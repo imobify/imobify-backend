@@ -54,6 +54,7 @@ npm run db:test:restart
 - [NestJS](https://nestjs.com/) - Node.js framework for building efficient, reliable and scalable server-side applications.
 - [Prisma](https://www.prisma.io/) with [PostgreSQL](https://www.postgresql.org/) - ORM and data storage.
 - [Docker](https://www.docker.com/) - Development and testing environments with containerized databases.
+- [Cloudinary](https://cloudinary.com/) - Cloud service for image upload and delivery.
 
 ## ⚙️ Utilities
 
