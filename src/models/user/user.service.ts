@@ -27,6 +27,9 @@ export class UserService {
     try {
       if (dto.password) {
         const hash = await argon.hash(dto.password);
+
+        delete dto.password;
+
         const user = await this.prisma.user.update({
           where: {
             id,
