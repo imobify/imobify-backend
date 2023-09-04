@@ -25,4 +25,29 @@ export class PrismaService extends PrismaClient {
       this.userType.deleteMany(),
     ]);
   }
+
+  seedDb() {
+    return this.$transaction([
+      this.userType.upsert({
+        where: {
+          type: 'Cliente',
+        },
+        update: {},
+        create: {
+          id: 1,
+          type: 'Cliente',
+        },
+      }),
+      this.userType.upsert({
+        where: {
+          type: 'Anunciante',
+        },
+        update: {},
+        create: {
+          id: 2,
+          type: 'Anunciante',
+        },
+      }),
+    ]);
+  }
 }
