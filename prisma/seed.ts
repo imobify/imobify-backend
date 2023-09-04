@@ -10,6 +10,7 @@ async function main() {
       },
       update: {},
       create: {
+        id: 1,
         type: 'Cliente',
       },
     }),
@@ -19,6 +20,7 @@ async function main() {
       },
       update: {},
       create: {
+        id: 2,
         type: 'Anunciante',
       },
     }),
