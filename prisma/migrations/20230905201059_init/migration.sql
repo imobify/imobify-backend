@@ -42,19 +42,9 @@ CREATE TABLE "real_estate" (
     "renting_value" DOUBLE PRECISION NOT NULL,
     "tax_value" DOUBLE PRECISION NOT NULL,
     "coordinates" geometry(Point, 4326) NOT NULL,
+    "owner_id" UUID NOT NULL,
 
     CONSTRAINT "real_estate_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "listing" (
-    "id" SERIAL NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "author_id" UUID NOT NULL,
-    "realEstate_id" INTEGER NOT NULL,
-
-    CONSTRAINT "listing_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -102,17 +92,11 @@ CREATE UNIQUE INDEX "user_type_type_key" ON "user_type"("type");
 -- CreateIndex
 CREATE INDEX "location_idx" ON "real_estate" USING GIST ("coordinates");
 
--- CreateIndex
-CREATE UNIQUE INDEX "listing_realEstate_id_key" ON "listing"("realEstate_id");
-
 -- AddForeignKey
 ALTER TABLE "user" ADD CONSTRAINT "user_type_id_fkey" FOREIGN KEY ("type_id") REFERENCES "user_type"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "listing" ADD CONSTRAINT "listing_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "listing" ADD CONSTRAINT "listing_realEstate_id_fkey" FOREIGN KEY ("realEstate_id") REFERENCES "real_estate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "real_estate" ADD CONSTRAINT "real_estate_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "lead" ADD CONSTRAINT "lead_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

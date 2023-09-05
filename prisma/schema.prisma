@@ -26,7 +26,7 @@ model User {
   type UserType @relation(fields: [type_id], references: [id])
   type_id Int
 
-  listings RealEstateListing[]
+  realEstate RealEstate[]
   leads Lead[]
   favorites Favorite[]
 
@@ -59,7 +59,8 @@ model RealEstate {
   tax_value Float
   coordinates Unsupported("geometry(Point, 4326)")
 
-  listing RealEstateListing?
+  owner User @relation(fields: [owner_id], references: [id])
+  owner_id String @db.Uuid
   leads Lead[]
   favorites Favorite[]
   photos RealEstatePhoto[]
@@ -68,18 +69,18 @@ model RealEstate {
   @@map("real_estate")
 }
 
-model RealEstateListing {
-  id Int @default(autoincrement()) @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// model RealEstateListing {
+//   id Int @default(autoincrement()) @id
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
 
-  author User @relation(fields: [author_id], references: [id])
-  author_id String @db.Uuid
-  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-  realEstate_id Int @unique
+//   author User @relation(fields: [author_id], references: [id])
+//   author_id String @db.Uuid
+//   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+//   realEstate_id Int @unique
 
-  @@map("listing")
-}
+//   @@map("listing")
+// }
 
 model Lead {
   id Int @default(autoincrement()) @id
