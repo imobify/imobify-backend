@@ -1,4 +1,4 @@
-import { SignupDto } from '../../src/auth/dto';
+import { SigninDto, SignupDto } from '../../src/auth/dto';
 
 const correctSignupDto: SignupDto = {
   name: 'Test User',
@@ -8,73 +8,80 @@ const correctSignupDto: SignupDto = {
   type_id: 1,
 };
 
-const signupDtoNoEmail = {
-  name: 'Test User',
-  document: '22597409015', // document generated randomly
-  password: 'testuser1A!',
-  type_id: 1,
-};
-
-const signupDtoNoName = {
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  password: 'testuser1A!',
-  type_id: 1,
-};
-
-const signupDtoNoDocument = {
-  name: 'Test User',
+const correctSignInDto: SigninDto = {
   email: 'test@gmail.com',
   password: 'testuser1A!',
-  type_id: 1,
 };
 
-const signupDtoNoPassword = {
-  name: 'Test User',
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  type_id: 1,
+const signUp = {
+  signupDtoNoEmail: {
+    name: 'Test User',
+    document: '22597409015',
+    password: 'testuser1A!',
+    type_id: 1,
+  },
+  signupDtoNoName: {
+    email: 'test@gmail.com',
+    document: '22597409015',
+    password: 'testuser1A!',
+    type_id: 1,
+  },
+  signupDtoNoDocument: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    password: 'testuser1A!',
+    type_id: 1,
+  },
+  signupDtoNoPassword: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    document: '22597409015',
+    type_id: 1,
+  },
+  signupDtoNoType: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    document: '22597409015',
+    password: 'testuser1A!',
+  },
+  signupDtoShortPassword: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    document: '22597409015',
+    password: 'test',
+    type_id: 1,
+  },
+  signupDtoPasswordNoCapital: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    document: '22597409015',
+    password: 'testuser1',
+    type_id: 1,
+  },
+  signupDtoPasswordNoNumbers: {
+    name: 'Test User',
+    email: 'test@gmail.com',
+    document: '22597409015',
+    password: 'testuserA',
+    type_id: 1,
+  },
 };
 
-const signupDtoNoType = {
-  name: 'Test User',
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  password: 'testuser1A!',
+const signIn = {
+  signinDtoNoEmail: {
+    password: 'testuser1A!',
+  },
+  signinDtoNoPassword: {
+    email: 'test@gmail.com',
+  },
+  signinDtoWrongEmail: {
+    email: 'wrong@gmail.com',
+    password: 'testuser1A!',
+  },
+  signinDtoWrongPassword: {
+    email: 'test@gmail.com',
+    password: 'testuser2B@',
+  },
 };
 
-const signupDtoShortPassword = {
-  name: 'Test User',
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  password: 'test',
-  type_id: 1,
-};
-
-const signupDtoPasswordNoCapital = {
-  name: 'Test User',
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  password: 'testuser1',
-  type_id: 1,
-};
-
-const signupDtoPasswordNoNumbers = {
-  name: 'Test User',
-  email: 'test@gmail.com',
-  document: '22597409015', // document generated randomly
-  password: 'testuserA',
-  type_id: 1,
-};
-
-export {
-  correctSignupDto,
-  signupDtoNoName,
-  signupDtoNoDocument,
-  signupDtoNoEmail,
-  signupDtoNoPassword,
-  signupDtoNoType,
-  signupDtoShortPassword,
-  signupDtoPasswordNoCapital,
-  signupDtoPasswordNoNumbers,
-};
+export { correctSignupDto, signUp, signIn, correctSignInDto };
