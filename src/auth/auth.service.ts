@@ -28,11 +28,7 @@ export class AuthService {
       return this.signToken(user);
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials already in use!');
-        }
-
-        throw error;
+        throw new ForbiddenException('Credentials already in use!');
       }
 
       throw error;
@@ -40,27 +36,23 @@ export class AuthService {
   }
 
   async signIn(dto: SigninDto) {
-    try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          email: dto.email,
-        },
-      });
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
 
-      if (!user) {
-        throw new ForbiddenException('Incorrect credentials!');
-      }
-
-      const passwordMatch = await argon.verify(user.hash, dto.password);
-
-      if (!passwordMatch) {
-        throw new ForbiddenException('Incorrect credentials!');
-      }
-
-      return this.signToken(user);
-    } catch (error) {
-      throw error;
+    if (!user) {
+      throw new ForbiddenException('Incorrect credentials!');
     }
+
+    const passwordMatch = await argon.verify(user.hash, dto.password);
+
+    if (!passwordMatch) {
+      throw new ForbiddenException('Incorrect credentials!');
+    }
+
+    return this.signToken(user);
   }
 
   async signToken(user: User): OutputDto {
