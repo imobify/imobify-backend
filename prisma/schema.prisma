@@ -34,7 +34,7 @@ model User {
 }
 
 model UserType {
-  id Int @id @default(autoincrement())
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -46,7 +46,7 @@ model UserType {
 }
 
 model RealEstate {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -69,53 +69,53 @@ model RealEstate {
 }
 
 model RealEstateListing {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   author User @relation(fields: [author_id], references: [id])
   author_id String @db.Uuid
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-  realEstate_id String @unique @db.Uuid
+  realEstate_id Int @unique
 
   @@map("listing")
 }
 
 model Lead {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   author User @relation(fields: [author_id], references: [id])
   author_id String @db.Uuid
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-  realEstate_id String @db.Uuid
+  realEstate_id Int
 
   @@map("lead")
 }
 
 model Favorite {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   author User @relation(fields: [author_id], references: [id])
   author_id String @db.Uuid
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-  realEstate_id String @db.Uuid
+  realEstate_id Int
 
   @@map("favorite")
 }
 
 model RealEstatePhoto {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   photoUrl String
 
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-  realEstate_id String @db.Uuid
+  realEstate_id Int
 
   @@map("real_estate_photo")
 }

@@ -31,7 +31,7 @@ CREATE TABLE "user_type" (
 
 -- CreateTable
 CREATE TABLE "real_estate" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
@@ -48,44 +48,44 @@ CREATE TABLE "real_estate" (
 
 -- CreateTable
 CREATE TABLE "listing" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "author_id" UUID NOT NULL,
-    "realEstate_id" UUID NOT NULL,
+    "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "listing_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "lead" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "author_id" UUID NOT NULL,
-    "realEstate_id" UUID NOT NULL,
+    "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "lead_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "favorite" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "author_id" UUID NOT NULL,
-    "realEstate_id" UUID NOT NULL,
+    "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "favorite_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "real_estate_photo" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "photoUrl" TEXT NOT NULL,
-    "realEstate_id" UUID NOT NULL,
+    "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "real_estate_photo_pkey" PRIMARY KEY ("id")
 );
