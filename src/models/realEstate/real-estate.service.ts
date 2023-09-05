@@ -4,13 +4,13 @@ import { QueryDto } from '../shared/dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
-export class ListingService {
+export class RealEstateService {
   constructor(private readonly prisma: PrismaService) {}
 
-  getListings(query: QueryDto) {
+  getPaginatedRealEstate(query: QueryDto) {
     const { take, cursor } = query;
 
-    return this.prisma.realEstateListing.findMany({
+    return this.prisma.realEstate.findMany({
       take,
       skip: 0,
       where: {

@@ -1,17 +1,17 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ListingService } from './listing.service';
+import { RealEstateService } from './real-estate.service';
 import { JwtGuard } from '../../auth/guard';
 import { QueryDto } from '../shared/dto';
 import { CreateListingDto } from './dto';
 
 // @UseGuards(JwtGuard)
-@Controller('listings')
-export class ListingController {
-  constructor(private readonly listingService: ListingService) {}
+@Controller('real-estate')
+export class RealEstateController {
+  constructor(private readonly realEstateService: RealEstateService) {}
 
   @Get()
-  getListings(@Query() query: QueryDto) {
-    return this.listingService.getListings(query);
+  getPaginatedRealEstate(@Query() query: QueryDto) {
+    return this.realEstateService.getPaginatedRealEstate(query);
   }
 
   @Post()

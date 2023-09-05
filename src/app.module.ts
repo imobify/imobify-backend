@@ -4,7 +4,7 @@ import { PrismaModule } from './shared/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { ImageModule } from './shared/image/image.module';
 import { UserModule } from './models/user/user.module';
-import { ListingModule } from './models/listing/listing.module';
+import { RealEstateModule } from './models/realEstate/real-estate.module';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { ListingModule } from './models/listing/listing.module';
     AuthModule,
     ImageModule,
     UserModule,
-    ListingModule,
+    RealEstateModule,
   ],
   controllers: [],
   providers: [],
