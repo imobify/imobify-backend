@@ -1,12 +1,9 @@
 -- CreateExtension
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
--- CreateExtension
 CREATE EXTENSION IF NOT EXISTS "postgis";
 
 -- CreateTable
 CREATE TABLE "user" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
@@ -42,7 +39,8 @@ CREATE TABLE "real_estate" (
     "renting_value" DOUBLE PRECISION NOT NULL,
     "tax_value" DOUBLE PRECISION NOT NULL,
     "coordinates" geometry(Point, 4326) NOT NULL,
-    "owner_id" UUID NOT NULL,
+    "isActive" BOOLEAN NOT NULL,
+    "owner_id" TEXT NOT NULL,
 
     CONSTRAINT "real_estate_pkey" PRIMARY KEY ("id")
 );
@@ -52,7 +50,7 @@ CREATE TABLE "lead" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "author_id" UUID NOT NULL,
+    "author_id" TEXT NOT NULL,
     "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "lead_pkey" PRIMARY KEY ("id")
@@ -63,7 +61,7 @@ CREATE TABLE "favorite" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "author_id" UUID NOT NULL,
+    "author_id" TEXT NOT NULL,
     "realEstate_id" INTEGER NOT NULL,
 
     CONSTRAINT "favorite_pkey" PRIMARY KEY ("id")

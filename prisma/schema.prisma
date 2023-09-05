@@ -9,11 +9,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  extensions = [postgis, pgcrypto]
+  extensions = [postgis]
 }
 
 model User {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -58,9 +58,10 @@ model RealEstate {
   renting_value Float
   tax_value Float
   coordinates Unsupported("geometry(Point, 4326)")
+  isActive Boolean
 
   owner User @relation(fields: [owner_id], references: [id])
-  owner_id String @db.Uuid
+  owner_id String
   leads Lead[]
   favorites Favorite[]
   photos RealEstatePhoto[]
@@ -88,7 +89,7 @@ model Lead {
   updatedAt DateTime @updatedAt
 
   author User @relation(fields: [author_id], references: [id])
-  author_id String @db.Uuid
+  author_id String
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
   realEstate_id Int
 
@@ -101,7 +102,7 @@ model Favorite {
   updatedAt DateTime @updatedAt
 
   author User @relation(fields: [author_id], references: [id])
-  author_id String @db.Uuid
+  author_id String
   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
   realEstate_id Int
 
