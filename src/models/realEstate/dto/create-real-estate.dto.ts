@@ -1,11 +1,63 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsUUID,
+  IsNotEmptyObject,
+  IsDefined,
+} from 'class-validator';
 
-export class CreateListingDto {
+class Coordinates {
+  @IsNumber()
+  @IsNotEmpty()
+  longitude: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  latitude: number;
+}
+export class CreateRealEstateDto {
   @IsString()
   @IsNotEmpty()
-  author_id: string;
+  title: string;
 
   @IsString()
   @IsNotEmpty()
-  realEstate_id: string;
+  description: string;
+
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  area: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  selling_value: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  renting_value: number;
+
+  @IsNumber()
+  @IsOptional()
+  tax_value?: number;
+
+  @IsNotEmptyObject()
+  @IsDefined()
+  @ValidateNested()
+  coordinates: Coordinates;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isActive: boolean;
+
+  @IsUUID()
+  @IsNotEmpty()
+  owner_id: string;
 }

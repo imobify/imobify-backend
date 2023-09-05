@@ -1,16 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../shared/prisma/prisma.service';
 import { QueryDto } from '../shared/dto';
-import { Prisma } from '@prisma/client';
+import { CreateRealEstateDto } from './dto';
 
 @Injectable()
 export class RealEstateService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  getPaginatedRealEstate(query: QueryDto) {
+  async getPaginatedRealEstate(query: QueryDto) {
     const { take, cursor } = query;
 
-    return this.prisma.realEstate.findMany({
+    const realEstates = this.prisma.realEstate.findMany({
       take,
       skip: 0,
       where: {
@@ -19,5 +19,9 @@ export class RealEstateService {
         },
       },
     });
+  }
+
+  async createRealEstate(dto: CreateRealEstateDto) {
+    console.log({ dto });
   }
 }

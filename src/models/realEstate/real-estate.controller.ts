@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { RealEstateService } from './real-estate.service';
-import { JwtGuard } from '../../auth/guard';
 import { QueryDto } from '../shared/dto';
-import { CreateListingDto } from './dto';
+import { CreateRealEstateDto } from './dto';
 
 // @UseGuards(JwtGuard)
 @Controller('real-estate')
@@ -15,7 +14,7 @@ export class RealEstateController {
   }
 
   @Post()
-  createListing(@Body() dto: CreateListingDto) {
-    console.log({ dto });
+  createListing(@Body() dto: CreateRealEstateDto) {
+    return this.realEstateService.createRealEstate(dto);
   }
 }
