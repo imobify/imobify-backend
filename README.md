@@ -54,6 +54,8 @@ npm run db:test:restart
 ## 💻 Tecnologias
 - [NestJS](https://nestjs.com/) - Framework Node.js para construção de aplicações eficientes, confiáveis e escaláveis no lado do servidor.
 - [Prisma](https://www.prisma.io/) com [PostgreSQL](https://www.postgresql.org/) - ORM e banco de dados.
+- [PostGIS](https://postgis.net/) - Armazenamento e processamento de dados geográficos.
+- [Jest](https://jestjs.io/pt-BR/) e [PactumJS](https://pactumjs.github.io/) - Testes end-to-end.
 - [Docker](https://www.docker.com/) - Ambientes de desenvolvimento e testes com bancos de dados em containers.
 - [Cloudinary](https://cloudinary.com/) - Serviço em cloud para upload e entrega de imagens.
 
