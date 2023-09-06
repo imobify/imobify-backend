@@ -10,14 +10,13 @@ import {
   FileTypeValidator,
   MaxFileSizeValidator,
   Patch,
-  Param,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserService } from './user.service';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../auth/decorator';
 import { EditUserDto } from './dto';
+import { CheckUserIdInterceptor } from '../../auth/interceptor';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -30,7 +29,7 @@ export class UserController {
   }
 
   @Post(':id/avatar')
-  @UseInterceptors(FileInterceptor('avatar'))
+  @UseInterceptors(FileInterceptor('avatar'), CheckUserIdInterceptor)
   uploadImages(
     @UploadedFile(
       new ParseFilePipe({
@@ -41,22 +40,14 @@ export class UserController {
       })
     )
     avatar: Express.Multer.File,
-    @GetUser('id') requestId: string,
-    @Param('id') id: string
+    @GetUser('id') id: string
   ) {
-    if (requestId !== id) {
-      throw new UnauthorizedException('No permission.');
-    }
-
-    return this.userService.uploadAvatar(avatar, requestId);
+    return this.userService.uploadAvatar(avatar, id);
   }
 
   @Patch(':id')
-  editUser(@GetUser('id') requestId: string, @Param('id') id: string, @Body() dto: EditUserDto) {
-    if (requestId !== id) {
-      throw new UnauthorizedException('No permission.');
-    }
-
-    return this.userService.editUser(requestId, dto);
+  @UseInterceptors(CheckUserIdInterceptor)
+  editUser(@GetUser('id') id: string, @Body() dto: EditUserDto) {
+    return this.userService.editUser(id, dto);
   }
 }
