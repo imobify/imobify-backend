@@ -1,4 +1,4 @@
-import { closeTestServer, setupTestServer } from './utils/setupTestServer';
+import { closeTestServer, setupTestServer } from './utils';
 
 beforeAll(async () => {
   await setupTestServer();
