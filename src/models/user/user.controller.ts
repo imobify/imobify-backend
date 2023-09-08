@@ -1,22 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  UseInterceptors,
-  UploadedFile,
-  ParseFilePipe,
-  FileTypeValidator,
-  MaxFileSizeValidator,
-  Patch,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Get, Post, UseGuards, UseInterceptors, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../auth/decorator';
-import { EditUserDto } from './dto';
+import { EditUserDto, UploadAvatarDto } from './dto';
 import { CheckUserIdInterceptor } from '../../auth/interceptor';
+import { FormDataRequest } from 'nestjs-form-data';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -29,20 +17,10 @@ export class UserController {
   }
 
   @Post(':id/avatar')
-  @UseInterceptors(FileInterceptor('avatar'), CheckUserIdInterceptor)
-  uploadImages(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new FileTypeValidator({ fileType: '.(png|jpeg|jpg)' }),
-          new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 10 }),
-        ],
-      })
-    )
-    avatar: Express.Multer.File,
-    @GetUser('id') id: string
-  ) {
-    return this.userService.uploadAvatar(avatar, id);
+  @UseInterceptors(CheckUserIdInterceptor)
+  @FormDataRequest()
+  uploadAvatar(@GetUser('id') userId: string, dto: UploadAvatarDto) {
+    return this.userService.uploadAvatar(dto, userId);
   }
 
   @Patch(':id')

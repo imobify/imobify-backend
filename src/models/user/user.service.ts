@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
 import { ImageService } from '../../shared/image/image.service';
 import { PrismaService } from '../../shared/prisma/prisma.service';
-import { EditUserDto } from './dto';
+import { EditUserDto, UploadAvatarDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -52,15 +52,26 @@ export class UserService {
     }
   }
 
-  async uploadAvatar(image: Express.Multer.File, userId: string) {
-    const imageResponse = await this.imageService.uploadFileToCloudinary(image);
+  async uploadAvatar(dto: UploadAvatarDto, userId: string) {
+    const imageResponse = await this.imageService.uploadFileToCloudinary(dto.avatar);
 
-    const user = await this.prisma.user.update({
+    const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
       },
+    });
+
+    if (user.avatar_public_id) {
+      await this.imageService.deleteFileFromCloudinary(user.avatar_public_id);
+    }
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
       data: {
         avatar_url: imageResponse.secure_url,
+        avatar_public_id: imageResponse.public_id,
       },
     });
 

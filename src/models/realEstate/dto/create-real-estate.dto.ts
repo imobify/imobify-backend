@@ -1,27 +1,9 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsOptional,
-  IsBoolean,
-  ValidateNested,
-  IsUUID,
-  IsNotEmptyObject,
-  IsDefined,
-} from 'class-validator';
-
-class Coordinates {
-  @IsNumber()
-  @IsNotEmpty()
-  longitude: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  latitude: number;
-}
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import { HasMimeType, IsFiles, MaxFileSize, MemoryStoredFile } from 'nestjs-form-data';
 export class CreateRealEstateDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   title: string;
 
   @IsString()
@@ -32,32 +14,44 @@ export class CreateRealEstateDto {
   @IsNotEmpty()
   address: string;
 
+  @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   area: number;
 
+  @Type(() => Number)
   @IsNumber()
-  @IsNotEmpty()
-  selling_value: number;
+  @Min(100)
+  @IsOptional()
+  selling_value?: number;
 
+  @Type(() => Number)
   @IsNumber()
-  @IsNotEmpty()
-  renting_value: number;
+  @Min(100)
+  @IsOptional()
+  renting_value?: number;
 
+  @Type(() => Number)
   @IsNumber()
   @IsOptional()
   tax_value?: number;
 
-  @IsNotEmptyObject()
-  @IsDefined()
-  @ValidateNested()
-  coordinates: Coordinates;
-
-  @IsBoolean()
+  @Type(() => Number)
+  @IsNumber()
   @IsNotEmpty()
-  isActive: boolean;
+  longitude: number;
 
-  @IsUUID()
+  @Type(() => Number)
+  @IsNumber()
   @IsNotEmpty()
-  owner_id: string;
+  latitude: number;
+
+  @IsString()
+  @IsNotEmpty()
+  isActive: string;
+
+  @IsFiles()
+  @MaxFileSize(1024 * 1024 * 10, { each: true })
+  @HasMimeType(['image/jpeg', 'image/png'], { each: true })
+  images: MemoryStoredFile[];
 }
