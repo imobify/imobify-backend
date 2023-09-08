@@ -22,6 +22,7 @@ model User {
   document String @unique
   hash String
   avatar_url String?
+  avatar_public_id String?
 
   type UserType @relation(fields: [type_id], references: [id])
   type_id Int
@@ -54,13 +55,13 @@ model RealEstate {
   description String
   address String
   area Float
-  selling_value Float
-  renting_value Float
-  tax_value Float
+  selling_value Float?
+  renting_value Float?
+  tax_value Float?
   coordinates Unsupported("geometry(Point, 4326)")
   isActive Boolean
 
-  owner User @relation(fields: [owner_id], references: [id])
+  owner User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   owner_id String
   leads Lead[]
   favorites Favorite[]
@@ -70,19 +71,6 @@ model RealEstate {
   @@map("real_estate")
 }
 
-// model RealEstateListing {
-//   id Int @default(autoincrement()) @id
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-
-//   author User @relation(fields: [author_id], references: [id])
-//   author_id String @db.Uuid
-//   realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
-//   realEstate_id Int @unique
-
-//   @@map("listing")
-// }
-
 model Lead {
   id Int @default(autoincrement()) @id
   createdAt DateTime @default(now())
@@ -90,7 +78,7 @@ model Lead {
 
   author User @relation(fields: [author_id], references: [id])
   author_id String
-  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id], onDelete: Cascade)
   realEstate_id Int
 
   @@map("lead")
@@ -103,7 +91,7 @@ model Favorite {
 
   author User @relation(fields: [author_id], references: [id])
   author_id String
-  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id], onDelete: Cascade)
   realEstate_id Int
 
   @@map("favorite")
@@ -115,8 +103,9 @@ model RealEstatePhoto {
   updatedAt DateTime @updatedAt
 
   photoUrl String
+  photoPublicId String
 
-  realEstate RealEstate @relation(fields: [realEstate_id], references: [id])
+  realEstate RealEstate @relation(fields: [realEstate_id], references: [id], onDelete: Cascade)
   realEstate_id Int
 
   @@map("real_estate_photo")
