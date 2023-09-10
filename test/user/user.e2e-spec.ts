@@ -6,6 +6,7 @@ const mainUser = {
   name: faker.person.fullName(),
   email: faker.internet.email(),
   document: faker.string.numeric({ length: 11 }),
+  phone: faker.phone.number('##########'),
   password: faker.internet.password(),
   type_id: faker.helpers.arrayElement([1, 2]),
 };
@@ -14,6 +15,7 @@ const secondUser = {
   name: faker.person.fullName(),
   email: faker.internet.email(),
   document: faker.string.numeric({ length: 11 }),
+  phone: faker.phone.number('##########'),
   password: faker.internet.password({ prefix: '1A' }),
   type_id: faker.helpers.arrayElement([1, 2]),
 };

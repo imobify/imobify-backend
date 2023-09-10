@@ -7,12 +7,24 @@ describe('Auth e2e', () => {
       return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoNoEmail).expectStatus(400);
     });
 
+    it('Should throw if email is not valid format', () => {
+      return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoInvalidEmail).expectStatus(400);
+    });
+
     it('Should throw if name is empty', () => {
       return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoNoName).expectStatus(400);
     });
 
     it('Should throw if document is empty', () => {
       return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoNoDocument).expectStatus(400);
+    });
+
+    it('Should throw if phone is empty', () => {
+      return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoNoPhone).expectStatus(400);
+    });
+
+    it('Should throw if phone is not valid format', () => {
+      return pactum.spec().post('/auth/signup').withBody(constants.signUp.signupDtoInvalidPhone).expectStatus(400);
     });
 
     it('Should throw if type_id is empty', () => {
