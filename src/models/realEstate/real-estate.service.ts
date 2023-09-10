@@ -278,6 +278,8 @@ export class RealEstateService {
 
     if (userId !== realEstate.owner_id) throw new ForbiddenException('No permission.');
 
+    await this.deleteRealEstatePhotos(realEstate.id);
+
     return this.prisma.realEstate.delete({
       where: {
         id: realEstateId,
@@ -300,5 +302,20 @@ export class RealEstateService {
     return this.prisma.realEstatePhoto.createMany({
       data: input,
     });
+  }
+
+  async deleteRealEstatePhotos(id: number) {
+    const realEstatePhotos = await this.prisma.realEstatePhoto.findMany({
+      where: {
+        realEstate_id: id,
+      },
+      select: {
+        photoPublicId: true,
+      },
+    });
+
+    for await (const photo of realEstatePhotos) {
+      await this.imageService.deleteFileFromCloudinary(photo.photoPublicId);
+    }
   }
 }
