@@ -11,6 +11,12 @@ export class SignupDto {
 
   @IsNotEmpty()
   @IsNumberString()
+  @MinLength(10)
+  @MaxLength(11)
+  phone: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
   @MinLength(11)
   @MaxLength(14)
   document: string;

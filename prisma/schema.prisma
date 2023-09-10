@@ -19,6 +19,7 @@ model User {
 
   name String
   email String @unique
+  phone String @unique
   document String @unique
   hash String
   avatar_url String?

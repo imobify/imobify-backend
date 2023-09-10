@@ -11,6 +11,12 @@ export class EditUserDto {
 
   @IsOptional()
   @IsNumberString()
+  @MinLength(10)
+  @MaxLength(11)
+  phone: string;
+
+  @IsOptional()
+  @IsNumberString()
   @MinLength(11)
   @MaxLength(14)
   document: string;

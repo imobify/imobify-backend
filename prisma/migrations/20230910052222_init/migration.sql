@@ -8,6 +8,7 @@ CREATE TABLE "user" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
     "document" TEXT NOT NULL,
     "hash" TEXT NOT NULL,
     "avatar_url" TEXT,
@@ -82,6 +83,9 @@ CREATE TABLE "real_estate_photo" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "user_phone_key" ON "user"("phone");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "user_document_key" ON "user"("document");
