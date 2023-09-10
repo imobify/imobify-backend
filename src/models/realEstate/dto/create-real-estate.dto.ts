@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsNotEmpty, IsString, IsNumber, IsOptional, Min, IsBoolean } from 'class-validator';
 import { HasMimeType, IsFiles, MaxFileSize, MemoryStoredFile } from 'nestjs-form-data';
 export class CreateRealEstateDto {
   @IsString()
@@ -46,9 +46,10 @@ export class CreateRealEstateDto {
   @IsNotEmpty()
   latitude: number;
 
-  @IsString()
+  @Transform(({ value }) => JSON.parse(value))
+  @IsBoolean()
   @IsNotEmpty()
-  isActive: string;
+  isActive: boolean;
 
   @IsFiles()
   @MaxFileSize(1024 * 1024 * 10, { each: true })
