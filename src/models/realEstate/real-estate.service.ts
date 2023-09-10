@@ -14,6 +14,7 @@ import { MemoryStoredFile } from 'nestjs-form-data';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { JwtGuard } from '../../auth/guard';
+import { AuthUser } from '../../auth/dto';
 
 @UseGuards(JwtGuard)
 @Injectable()
@@ -28,33 +29,12 @@ export class RealEstateService {
     return nearbyRealEstates;
   }
 
-  async getPaginatedRealEstates(query: QueryDto, userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        realEstate: {
-          select: {
-            id: true,
-          },
-          take: 1,
-          orderBy: {
-            id: 'asc',
-          },
-        },
-      },
-    });
-
-    if (!user) throw new ForbiddenException('Invalid token.');
-
-    if (user.type_id !== 2) throw new ForbiddenException('Invalid user type.');
-
+  async getPaginatedRealEstates(query: QueryDto, user: AuthUser) {
     const realEstates = await this.prisma.realEstate.findMany({
       take: query.take ? query.take : 20,
       skip: 0,
       cursor: {
-        id: query.cursor ? query.cursor : user.realEstate[0].id,
+        id: query.cursor ? query.cursor : user.realEstate[0].id ? user.realEstate[0]?.id : 1,
       },
       select: {
         id: true,
@@ -74,6 +54,9 @@ export class RealEstateService {
             leads: true,
           },
         },
+      },
+      where: {
+        owner_id: user.id,
       },
     });
 
@@ -112,22 +95,8 @@ export class RealEstateService {
     }
   }
 
-  async createRealEstate(dto: CreateRealEstateDto, userId: string) {
+  async createRealEstate(dto: CreateRealEstateDto, user: AuthUser) {
     try {
-      const user = await this.prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-      });
-
-      if (!user) {
-        throw new UnauthorizedException();
-      }
-
-      if (user.type_id !== 2) {
-        throw new ForbiddenException('Not allowed to create real estates.');
-      }
-
       const realEstate = await this.prisma.$queryRaw`
           INSERT INTO real_estate (title, description, address, area, selling_value, renting_value, tax_value, coordinates, "isActive", owner_id, "updatedAt")
           VALUES (
@@ -140,7 +109,7 @@ export class RealEstateService {
             ${dto.tax_value || dto.tax_value === 0 ? dto.tax_value : Prisma.sql`NULL`}, 
             ST_SetSRID(ST_MakePoint(${dto.longitude}, ${dto.latitude}), 4326), 
             CAST(${dto.isActive} AS BOOLEAN), 
-            ${userId}, 
+            ${user.id}, 
             NOW()
           ) 
           RETURNING id
@@ -178,33 +147,16 @@ export class RealEstateService {
     }
   }
 
-  async editRealEstate(dto: EditRealEstateDto, userId: string, realEstateId: number) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-      include: {
-        realEstate: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-
+  async editRealEstate(dto: EditRealEstateDto, user: AuthUser, realEstateId: number) {
     if (!user || !user.realEstate.filter(r => r.id === realEstateId).length) {
       throw new UnauthorizedException('No permission to edit this real estate.');
-    }
-
-    if (user.type_id !== 2) {
-      throw new ForbiddenException('Not allowed to edit real estates.');
     }
 
     if (dto.longitude && dto.latitude) {
       await this.prisma.$queryRaw`
         UPDATE real_estate
         SET coordinates = ST_SetSRID(ST_MakePoint(${dto.longitude}, ${dto.latitude}), 4326)
-        WHERE id = ${realEstateId} AND owner_id = ${userId}
+        WHERE id = ${realEstateId} AND owner_id = ${user.id}
       `;
     }
 
@@ -214,7 +166,7 @@ export class RealEstateService {
       },
       where: {
         id: realEstateId,
-        owner_id: userId,
+        owner_id: user.id,
       },
     });
 
@@ -223,20 +175,16 @@ export class RealEstateService {
     return { ...realEstate, coordinates };
   }
 
-  async updateRealEstatePhotos(dto: UpdatePhotosDto, userId: string, realEstateId: number) {
-    const user = (
-      await this.prisma.realEstate.findUnique({
-        where: {
-          id: realEstateId,
-        },
-        select: {
-          owner_id: true,
-        },
-      })
-    ).owner_id;
+  async updateRealEstatePhotos(dto: UpdatePhotosDto, user: AuthUser, realEstateId: number) {
+    const realEstate = await this.prisma.realEstate.findUnique({
+      where: {
+        id: realEstateId,
+        owner_id: user.id,
+      },
+    });
 
-    if (user !== userId) {
-      throw new UnauthorizedException('No permission.');
+    if (!realEstate) {
+      throw new ForbiddenException('No permission.');
     }
 
     if (dto.deletedPhotos.length) {

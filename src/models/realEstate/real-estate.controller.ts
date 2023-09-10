@@ -11,6 +11,7 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RealEstateService } from './real-estate.service';
 import { QueryDto } from '../shared/dto';
@@ -18,6 +19,8 @@ import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, UpdatePhotosDto } f
 import { GetUser } from '../../auth/decorator';
 import { JwtGuard } from '../../auth/guard';
 import { FormDataRequest } from 'nestjs-form-data';
+import { AuthUser } from '../../auth/dto';
+import { TypeIdCheckInterceptor } from '../shared/interceptors';
 
 @UseGuards(JwtGuard)
 @Controller('real-estate')
@@ -25,8 +28,9 @@ export class RealEstateController {
   constructor(private readonly realEstateService: RealEstateService) {}
 
   @Get()
-  getPaginatedRealEstate(@GetUser('id') userId: string, @Query() query: QueryDto) {
-    return this.realEstateService.getPaginatedRealEstates(query, userId);
+  @UseInterceptors(new TypeIdCheckInterceptor(2))
+  getPaginatedRealEstate(@GetUser() user, @Query() query: QueryDto) {
+    return this.realEstateService.getPaginatedRealEstates(query, user);
   }
 
   @Get('near')
@@ -40,33 +44,33 @@ export class RealEstateController {
   }
 
   @Post()
+  @UseInterceptors(new TypeIdCheckInterceptor(2))
   @FormDataRequest()
-  createRealEstate(@GetUser('id') userId: string, @Body() dto: CreateRealEstateDto) {
-    return this.realEstateService.createRealEstate(dto, userId);
+  createRealEstate(@GetUser() user: AuthUser, @Body() dto: CreateRealEstateDto) {
+    return this.realEstateService.createRealEstate(dto, user);
   }
 
   @Patch(':id')
+  @UseInterceptors(new TypeIdCheckInterceptor(2))
   @FormDataRequest()
-  editRealEstate(
-    @Param('id', ParseIntPipe) realEstateId: number,
-    @GetUser('id') userId: string,
-    @Body() dto: EditRealEstateDto
-  ) {
-    return this.realEstateService.editRealEstate(dto, userId, realEstateId);
+  editRealEstate(@Param('id', ParseIntPipe) realEstateId: number, @GetUser() user, @Body() dto: EditRealEstateDto) {
+    return this.realEstateService.editRealEstate(dto, user, realEstateId);
   }
 
   @Patch(':id/photos')
+  @UseInterceptors(new TypeIdCheckInterceptor(2))
   @FormDataRequest()
   updateRealEstatePhotos(
     @Param('id', ParseIntPipe) realEstateId: number,
-    @GetUser('id') userId: string,
+    @GetUser() user: AuthUser,
     @Body() dto: UpdatePhotosDto
   ) {
-    return this.realEstateService.updateRealEstatePhotos(dto, userId, realEstateId);
+    return this.realEstateService.updateRealEstatePhotos(dto, user, realEstateId);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @UseInterceptors(new TypeIdCheckInterceptor(2))
   deleteRealEstate(@Param('id', ParseIntPipe) realEstateId: number, @GetUser('id') userId: string) {
     return this.realEstateService.deleteRealEstate(userId, realEstateId);
   }

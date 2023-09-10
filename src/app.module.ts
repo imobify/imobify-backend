@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ImageModule } from './shared/image/image.module';
 import { UserModule } from './models/user/user.module';
 import { RealEstateModule } from './models/realEstate/real-estate.module';
+import { LeadModule } from './models/lead/lead.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RealEstateModule } from './models/realEstate/real-estate.module';
     ImageModule,
     UserModule,
     RealEstateModule,
+    LeadModule,
   ],
   controllers: [],
   providers: [],
