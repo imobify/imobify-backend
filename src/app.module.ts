@@ -7,6 +7,7 @@ import { ImageModule } from './shared/image/image.module';
 import { UserModule } from './models/user/user.module';
 import { RealEstateModule } from './models/realEstate/real-estate.module';
 import { LeadModule } from './models/lead/lead.module';
+import { FavoriteModule } from './models/favorite/favorite.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LeadModule } from './models/lead/lead.module';
     UserModule,
     RealEstateModule,
     LeadModule,
+    FavoriteModule,
   ],
   controllers: [],
   providers: [],
