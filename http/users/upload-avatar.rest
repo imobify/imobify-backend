@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/users/:id/avatar
+Authorization: Bearer < jwt token >
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="placeholder.png"
+Content-Type: image/png
+
+< ../assets/placeholder.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

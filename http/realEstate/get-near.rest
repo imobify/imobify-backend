@@ -1,0 +1,2 @@
+GET http://localhost:3000/api/real-estate/near?longitude=<longitude>&latitude=<latitude>
+Authorization: Bearer < jwt token >

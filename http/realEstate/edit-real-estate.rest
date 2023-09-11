@@ -1,0 +1,9 @@
+PATCH http://localhost:3000/api/real-estate/:id
+Authorization: Bearer < announcer jwt token >
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="title"
+
+edited real estate
+------WebKitFormBoundary7MA4YWxkTrZu0gW
