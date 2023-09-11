@@ -86,7 +86,7 @@ export class LeadService {
     });
 
     if (!realEstate) {
-      throw new NotFoundException('Could not find a lead with provided ID.');
+      throw new NotFoundException('Could not find a real estate with provided ID.');
     }
 
     const existingLead = await this.prisma.lead.findFirst({
