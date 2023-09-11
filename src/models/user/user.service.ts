@@ -3,6 +3,7 @@ import * as argon from 'argon2';
 import { ImageService } from '../../shared/image/image.service';
 import { PrismaService } from '../../shared/prisma/prisma.service';
 import { EditUserDto, UploadAvatarDto } from './dto';
+import { AuthUser } from '../../auth/dto';
 
 @Injectable()
 export class UserService {
@@ -76,5 +77,15 @@ export class UserService {
     });
 
     return { avatar_url: user.avatar_url };
+  }
+
+  async deleteUser(user: AuthUser) {
+    await this.imageService.deleteFileFromCloudinary(user.avatar_public_id);
+
+    return this.prisma.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
   }
 }
