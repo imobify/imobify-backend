@@ -236,15 +236,18 @@ export class RealEstateService {
   }
 
   async createRealEstatePhotos(images: MemoryStoredFile[], realEstateId: number) {
-    const cloudinaryData = [];
+    const imagePromises = images.map(image => {
+      return this.imageService.uploadFileToCloudinary(image);
+    });
 
-    for await (const image of images) {
-      const imageResponse = await this.imageService.uploadFileToCloudinary(image);
-      cloudinaryData.push({ photoUrl: imageResponse.secure_url, photoPublicId: imageResponse.public_id });
-    }
+    const responses = await Promise.all(imagePromises);
 
-    const input = cloudinaryData.map(data => {
-      return { realEstate_id: realEstateId, ...data };
+    const input = responses.map(res => {
+      return {
+        photoUrl: res.secure_url,
+        photoPublicId: res.public_id,
+        realEstate_id: realEstateId,
+      };
     });
 
     return this.prisma.realEstatePhoto.createMany({
@@ -262,8 +265,10 @@ export class RealEstateService {
       },
     });
 
-    for await (const photo of realEstatePhotos) {
-      await this.imageService.deleteFileFromCloudinary(photo.photoPublicId);
-    }
+    const imagePromises = realEstatePhotos.map(photo => {
+      return this.imageService.deleteFileFromCloudinary(photo.photoPublicId);
+    });
+
+    await Promise.all(imagePromises);
   }
 }
