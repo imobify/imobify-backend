@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
 import { ImageService } from '../../shared/image/image.service';
 import { PrismaService } from '../../shared/prisma/prisma.service';
@@ -20,15 +20,26 @@ export class UserService {
     return user;
   }
 
-  async editUser(id: string, dto: EditUserDto) {
+  async editUser(user: AuthUser, dto: EditUserDto) {
     if (dto.password) {
+      if (!dto.previous_password) {
+        throw new ForbiddenException('Cannot update password without validating previous password.');
+      }
+
+      const passwordMatch = await argon.verify(user.hash, dto.previous_password);
+
+      if (!passwordMatch) {
+        throw new BadRequestException('Previous password does not match.');
+      }
+
       const hash = await argon.hash(dto.password);
 
       delete dto.password;
+      delete dto.previous_password;
 
-      const user = await this.prisma.user.update({
+      const updatedUser = await this.prisma.user.update({
         where: {
-          id,
+          id: user.id,
         },
         data: {
           hash,
@@ -36,20 +47,20 @@ export class UserService {
         },
       });
 
-      delete user.hash;
-      return user;
+      delete updatedUser.hash;
+      return updatedUser;
     } else {
-      const user = await this.prisma.user.update({
+      const updatedUser = await this.prisma.user.update({
         where: {
-          id,
+          id: user.id,
         },
         data: {
           ...dto,
         },
       });
 
-      delete user.hash;
-      return user;
+      delete updatedUser.hash;
+      return updatedUser;
     }
   }
 

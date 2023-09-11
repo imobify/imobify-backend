@@ -37,8 +37,8 @@ export class UserController {
 
   @Patch(':id')
   @UseInterceptors(CheckUserIdInterceptor)
-  editUser(@GetUser('id') id: string, @Body() dto: EditUserDto) {
-    return this.userService.editUser(id, dto);
+  editUser(@GetUser() user: AuthUser, @Body() dto: EditUserDto) {
+    return this.userService.editUser(user, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

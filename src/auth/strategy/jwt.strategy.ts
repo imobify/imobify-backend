@@ -58,7 +58,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       throw new UnauthorizedException('Invalid token.');
     }
 
-    delete user.hash;
     return user as AuthUser;
   }
 }

@@ -10,4 +10,4 @@ export type AuthUser = {
   favorites: {
     id: number;
   }[];
-} & Omit<User, 'hash'>;
+} & User;

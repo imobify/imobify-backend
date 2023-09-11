@@ -1,29 +1,11 @@
-import { IsOptional, IsString, IsEmail, IsNumberString, MinLength, MaxLength, Matches } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/mapped-types';
+import { SignupDto } from '../../../auth/dto';
+import { IsOptional, IsString, Matches, MinLength } from 'class-validator';
 
-export class EditUserDto {
+export class EditUserDto extends PartialType(OmitType(SignupDto, ['type_id'] as const)) {
+  @IsOptional()
   @IsString()
-  @IsOptional()
-  name: string;
-
-  @IsEmail()
-  @IsOptional()
-  email: string;
-
-  @IsOptional()
-  @IsNumberString()
-  @MinLength(10)
-  @MaxLength(11)
-  phone: string;
-
-  @IsOptional()
-  @IsNumberString()
-  @MinLength(11)
-  @MaxLength(14)
-  document: string;
-
-  @IsString()
-  @IsOptional()
   @MinLength(8)
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/)
-  password: string;
+  previous_password?: string;
 }
