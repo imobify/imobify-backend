@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LeadService } from './lead.service';
 import { QueryDto } from '../shared/dto';
 import { GetUser } from '../../auth/decorator';
@@ -23,6 +35,7 @@ export class LeadController {
     return this.leadService.createLead(user, dto.realEstate_id);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @UseInterceptors(new TypeIdCheckInterceptor(1))
   deleteLead(@GetUser() user: AuthUser, @Param('id') leadId: number) {
