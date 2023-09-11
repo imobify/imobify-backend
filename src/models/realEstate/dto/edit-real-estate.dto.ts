@@ -1,43 +1,11 @@
-import { IsString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateRealEstateDto } from './create-real-estate.dto';
+import { IsArray, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
-export class EditRealEstateDto {
-  @IsString()
+export class EditRealEstateDto extends PartialType(CreateRealEstateDto) {
   @IsOptional()
-  title?: string;
-
-  @IsString()
-  @IsOptional()
-  description?: string;
-
-  @IsString()
-  @IsOptional()
-  address?: string;
-
-  @IsNumber()
-  @IsOptional()
-  area?: number;
-
-  @IsNumber()
-  @IsOptional()
-  selling_value?: number;
-
-  @IsNumber()
-  @IsOptional()
-  renting_value?: number;
-
-  @IsNumber()
-  @IsOptional()
-  tax_value?: number;
-
-  @IsNumber()
-  @IsOptional()
-  longitude?: number;
-
-  @IsNumber()
-  @IsOptional()
-  latitude?: number;
-
-  @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
+  @Transform(({ value }) => JSON.parse(value))
+  @IsArray()
+  deletedPhotos?: string[];
 }

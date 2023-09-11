@@ -140,7 +140,7 @@ export class RealEstateService {
       return { ...realEstateModel, coordinates };
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
-        throw new BadRequestException('Invalid request. Check /api/docs for reference.');
+        throw new BadRequestException('Invalid request.');
       } else {
         throw error;
       }
@@ -148,7 +148,17 @@ export class RealEstateService {
   }
 
   async editRealEstate(dto: EditRealEstateDto, user: AuthUser, realEstateId: number) {
-    if (!user || !user.realEstate.filter(r => r.id === realEstateId).length) {
+    const existingRealEstate = await this.prisma.realEstate.findUnique({
+      where: {
+        id: realEstateId,
+      },
+    });
+
+    if (!existingRealEstate) {
+      throw new NotFoundException('Could not find real estate with provided ID.');
+    }
+
+    if (existingRealEstate.owner_id !== user.id) {
       throw new UnauthorizedException('No permission to edit this real estate.');
     }
 
@@ -156,41 +166,16 @@ export class RealEstateService {
       await this.prisma.$queryRaw`
         UPDATE real_estate
         SET coordinates = ST_SetSRID(ST_MakePoint(${dto.longitude}, ${dto.latitude}), 4326)
-        WHERE id = ${realEstateId} AND owner_id = ${user.id}
+        WHERE id = ${existingRealEstate.id} AND owner_id = ${user.id}
       `;
     }
 
-    const realEstate = await this.prisma.postgis.realEstate.update({
-      data: {
-        ...dto,
-      },
-      where: {
-        id: realEstateId,
-        owner_id: user.id,
-      },
-    });
-
-    const coordinates = await realEstate.coords;
-
-    return { ...realEstate, coordinates };
-  }
-
-  async updateRealEstatePhotos(dto: UpdatePhotosDto, user: AuthUser, realEstateId: number) {
-    const realEstate = await this.prisma.realEstate.findUnique({
-      where: {
-        id: realEstateId,
-        owner_id: user.id,
-      },
-    });
-
-    if (!realEstate) {
-      throw new ForbiddenException('No permission.');
-    }
-
     if (dto.deletedPhotos.length) {
-      for await (const photo of dto.deletedPhotos) {
-        await this.imageService.deleteFileFromCloudinary(photo);
-      }
+      const imagePromises = dto.deletedPhotos.map(photo => {
+        return this.imageService.deleteFileFromCloudinary(photo);
+      });
+
+      await Promise.all(imagePromises);
 
       await this.prisma.realEstatePhoto.deleteMany({
         where: {
@@ -202,12 +187,71 @@ export class RealEstateService {
     }
 
     if (dto.images.length) {
-      await this.createRealEstatePhotos(dto.images, realEstateId);
+      await this.createRealEstatePhotos(dto.images, existingRealEstate.id);
+    }
+
+    const photos = await this.prisma.realEstatePhoto.findMany({
+      where: {
+        realEstate_id: existingRealEstate.id,
+      },
+      select: {
+        photoUrl: true,
+      },
+    });
+
+    const updatedRealEstate = await this.prisma.postgis.realEstate.update({
+      data: {
+        ...dto,
+      },
+      where: {
+        id: existingRealEstate.id,
+        owner_id: user.id,
+      },
+    });
+
+    const coordinates = await updatedRealEstate.coords;
+
+    return { ...updatedRealEstate, photos, coordinates };
+  }
+
+  async updateRealEstatePhotos(dto: UpdatePhotosDto, user: AuthUser, realEstateId: number) {
+    const existingRealEstate = await this.prisma.realEstate.findUnique({
+      where: {
+        id: realEstateId,
+      },
+    });
+
+    if (!existingRealEstate) {
+      throw new NotFoundException('Could not find real estate with provided ID.');
+    }
+
+    if (existingRealEstate.owner_id !== user.id) {
+      throw new UnauthorizedException('No permission to edit this real estate.');
+    }
+
+    if (dto.deletedPhotos.length) {
+      const imagePromises = dto.deletedPhotos.map(photo => {
+        return this.imageService.deleteFileFromCloudinary(photo);
+      });
+
+      await Promise.all(imagePromises);
+
+      await this.prisma.realEstatePhoto.deleteMany({
+        where: {
+          photoPublicId: {
+            in: dto.deletedPhotos,
+          },
+        },
+      });
+    }
+
+    if (dto.images.length) {
+      await this.createRealEstatePhotos(dto.images, existingRealEstate.id);
     }
 
     return this.prisma.realEstatePhoto.findMany({
       where: {
-        realEstate_id: realEstateId,
+        realEstate_id: existingRealEstate.id,
       },
       select: {
         photoUrl: true,
