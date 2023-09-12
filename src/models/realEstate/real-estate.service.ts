@@ -115,7 +115,9 @@ export class RealEstateService {
           RETURNING id
         `;
 
-      await this.createRealEstatePhotos(dto.images, realEstate[0].id);
+      if (dto.images) {
+        await this.createRealEstatePhotos(dto.images, realEstate[0].id);
+      }
 
       const realEstateModel = await this.prisma.postgis.realEstate.findUnique({
         where: {
