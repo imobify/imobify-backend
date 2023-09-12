@@ -64,35 +64,33 @@ export class RealEstateService {
   }
 
   async getRealEstateById(id: number) {
-    try {
-      const realEstate = await this.prisma.postgis.realEstate.findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          photos: {
-            select: {
-              photoUrl: true,
-              photoPublicId: true,
-            },
-          },
-          owner: {
-            select: {
-              name: true,
-              avatar_url: true,
-            },
+    const realEstate = await this.prisma.postgis.realEstate.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        photos: {
+          select: {
+            photoUrl: true,
+            photoPublicId: true,
           },
         },
-      });
+        owner: {
+          select: {
+            name: true,
+            avatar_url: true,
+          },
+        },
+      },
+    });
 
-      const coordinates = await realEstate.coords;
-
-      return { ...realEstate, coordinates };
-    } catch (error) {
-      console.log(error);
-
+    if (!realEstate) {
       throw new NotFoundException('Could not find a real estate with provided ID.');
     }
+
+    const coordinates = await realEstate.coords;
+
+    return { ...realEstate, coordinates };
   }
 
   async createRealEstate(dto: CreateRealEstateDto, user: AuthUser) {
