@@ -51,8 +51,9 @@ export class CreateRealEstateDto {
   @IsNotEmpty()
   isActive: boolean;
 
+  @IsOptional()
   @IsFiles()
   @MaxFileSize(1024 * 1024 * 10, { each: true })
   @HasMimeType(['image/jpeg', 'image/png'], { each: true })
-  images: MemoryStoredFile[];
+  images?: MemoryStoredFile[];
 }
