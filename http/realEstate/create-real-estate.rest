@@ -11,7 +11,7 @@ Content-Disposition: form-data; name="description"
 
 real estate created for test purposes
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="address
+Content-Disposition: form-data; name="address"
 
 street number zipcode city state
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -39,7 +39,7 @@ Content-Disposition: form-data; name="isActive"
 
 true
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="images"; filename="placeholder.png"
+Content-Disposition: form-data; name="images[]"; filename="placeholder.png"
 Content-Type: image/png
 
 < ../assets/placeholder.png

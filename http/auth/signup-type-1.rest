@@ -4,6 +4,7 @@ Content-Type: application/json
 {
   "name": "Test User",
   "email": "testuser@gmail.com",
+  "phone": "1140028922",
   "password": "testpass123A!",
   "document": "71681995018",
   "type_id": 1
