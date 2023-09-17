@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   async signToken(user: User): OutputDto {
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, type_id: user.type_id };
 
     const token = await this.jwt.signAsync(payload, {
       secret: this.config.get('JWT_SECRET'),
