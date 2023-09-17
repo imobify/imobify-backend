@@ -29,7 +29,7 @@ export class RealEstateController {
 
   @Get()
   @UseInterceptors(new TypeIdCheckInterceptor(2))
-  getPaginatedRealEstate(@GetUser() user, @Query() query: QueryDto) {
+  getPaginatedRealEstates(@GetUser() user, @Query() query: QueryDto) {
     return this.realEstateService.getPaginatedRealEstates(query, user);
   }
 
