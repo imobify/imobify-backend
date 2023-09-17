@@ -7,7 +7,7 @@ const mainUser = {
   email: faker.internet.email(),
   document: faker.string.numeric({ length: 11 }),
   phone: faker.phone.number('##########'),
-  password: faker.internet.password(),
+  password: faker.internet.password({ prefix: '1A' }),
   type_id: faker.helpers.arrayElement([1, 2]),
 };
 
