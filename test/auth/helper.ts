@@ -6,7 +6,7 @@ const correctSignupDto: SignupDto = {
   email: faker.internet.email(),
   document: faker.string.numeric({ length: 11 }),
   phone: faker.phone.number('##########'),
-  password: faker.internet.password(),
+  password: faker.internet.password({ prefix: '1Ab' }),
   type_id: faker.helpers.arrayElement([1, 2]),
 };
 
@@ -20,7 +20,7 @@ const signUp = {
     name: faker.person.fullName(),
     document: faker.string.numeric({ length: 11 }),
     phone: faker.phone.number('##########'),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoInvalidEmail: {
@@ -28,7 +28,7 @@ const signUp = {
     email: 'notanemail',
     document: faker.string.numeric({ length: 11 }),
     phone: faker.phone.number('##########'),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoInvalidPhone: {
@@ -36,28 +36,28 @@ const signUp = {
     email: faker.internet.email(),
     document: faker.string.numeric({ length: 11 }),
     phone: '123',
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoNoPhone: {
     name: faker.person.fullName(),
     email: faker.internet.email(),
     document: faker.string.numeric({ length: 11 }),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoNoName: {
     email: faker.internet.email(),
     document: faker.string.numeric({ length: 11 }),
     phone: faker.phone.number('##########'),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoNoDocument: {
     name: faker.person.fullName(),
     email: faker.internet.email(),
     phone: faker.phone.number('##########'),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
     type_id: faker.helpers.arrayElement([1, 2]),
   },
   signupDtoNoPassword: {
@@ -72,7 +72,7 @@ const signUp = {
     email: faker.internet.email(),
     document: faker.string.numeric({ length: 11 }),
     phone: faker.phone.number('##########'),
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
   },
   signupDtoShortPassword: {
     name: faker.person.fullName(),
@@ -113,7 +113,7 @@ const signIn = {
   },
   signinDtoWrongPassword: {
     email: correctSignupDto.email,
-    password: faker.internet.password(),
+    password: faker.internet.password({ prefix: '1Ab' }),
   },
 };
 
