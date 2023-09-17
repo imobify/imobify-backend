@@ -170,7 +170,7 @@ export class RealEstateService {
       `;
     }
 
-    if (dto.deletedPhotos.length) {
+    if (dto.deletedPhotos !== null && dto.deletedPhotos !== undefined && dto.deletedPhotos.length) {
       const imagePromises = dto.deletedPhotos.map(photo => {
         return this.imageService.deleteFileFromCloudinary(photo);
       });
@@ -184,10 +184,14 @@ export class RealEstateService {
           },
         },
       });
+
+      delete dto.deletedPhotos;
     }
 
-    if (dto.images.length) {
+    if (dto.images !== null && dto.images !== undefined && dto.images.length) {
       await this.createRealEstatePhotos(dto.images, existingRealEstate.id);
+
+      delete dto.images;
     }
 
     const photos = await this.prisma.realEstatePhoto.findMany({
