@@ -3,25 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 import { Coordinates } from './types';
 
-const prisma = new PrismaClient();
-
-@Injectable()
-export class PrismaService extends PrismaClient {
-  constructor(config: ConfigService) {
-    super({
-      datasources: {
-        db: {
-          url: config.get('DATABASE_URL'),
-        },
-      },
-    });
-  }
-
-  postgis = this.$extends({
+function getExtendedClient(baseClient: PrismaService) {
+  return baseClient.$extends({
     model: {
       realEstate: {
         async findManyNear(coords: Coordinates, maxDistance = 5000) {
-          return await prisma.$queryRaw`
+          return await baseClient.$queryRaw`
             SELECT
               id,
               ST_X(coordinates::geometry) AS longitude,
@@ -51,7 +38,7 @@ export class PrismaService extends PrismaClient {
           needs: { id: true },
           async compute(data): Promise<Coordinates> {
             return (
-              await prisma.$queryRaw<Coordinates[]>`
+              await baseClient.$queryRaw<Coordinates[]>`
                 SELECT
                   ST_X(coordinates::geometry) AS longitude,
                   ST_Y(coordinates::geometry) AS latitude
@@ -66,6 +53,23 @@ export class PrismaService extends PrismaClient {
       },
     },
   });
+}
+
+@Injectable()
+export class PrismaService extends PrismaClient {
+  constructor(config: ConfigService) {
+    super({
+      datasources: {
+        db: {
+          url: config.get('DATABASE_URL'),
+        },
+      },
+    });
+
+    this.postgis = getExtendedClient(this);
+  }
+
+  readonly postgis: ReturnType<typeof getExtendedClient>;
 
   async getCoordinates(data) {
     return this.$queryRaw<Coordinates[]>`
