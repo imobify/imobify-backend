@@ -61,6 +61,7 @@ model RealEstate {
   tax_value Float?
   coordinates Unsupported("geometry(Point, 4326)")
   isActive Boolean
+  search String
 
   owner User @relation(fields: [owner_id], references: [id], onDelete: Cascade)
   owner_id String
@@ -69,6 +70,7 @@ model RealEstate {
   photos RealEstatePhoto[]
 
   @@index([coordinates], name: "location_idx", type: Gist)
+  @@index([search(ops: raw("gin_trgm_ops"))], type: Gin)
   @@map("real_estate")
 }
 

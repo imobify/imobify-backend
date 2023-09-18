@@ -42,6 +42,7 @@ CREATE TABLE "real_estate" (
     "tax_value" DOUBLE PRECISION,
     "coordinates" geometry(Point, 4326) NOT NULL,
     "isActive" BOOLEAN NOT NULL,
+    "search" TEXT NOT NULL,
     "owner_id" TEXT NOT NULL,
 
     CONSTRAINT "real_estate_pkey" PRIMARY KEY ("id")
