@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from '../../shared/prisma/prisma.service';
 import { ImageService } from '../../shared/image/image.service';
@@ -13,10 +12,8 @@ import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, UpdatePhotosDto } f
 import { MemoryStoredFile } from 'nestjs-form-data';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { JwtGuard } from '../../auth/guard';
 import { AuthUser } from '../../auth/dto';
 
-@UseGuards(JwtGuard)
 @Injectable()
 export class RealEstateService {
   constructor(private prisma: PrismaService, private imageService: ImageService) {}
@@ -96,7 +93,7 @@ export class RealEstateService {
   async createRealEstate(dto: CreateRealEstateDto, user: AuthUser) {
     try {
       const realEstate = await this.prisma.$queryRaw`
-          INSERT INTO real_estate (title, description, address, area, selling_value, renting_value, tax_value, coordinates, "isActive", owner_id, "updatedAt")
+          INSERT INTO real_estate (title, description, address, area, selling_value, renting_value, tax_value, coordinates, "isActive", owner_id, "updatedAt", search)
           VALUES (
             ${dto.title}, 
             ${dto.description}, 
@@ -108,7 +105,8 @@ export class RealEstateService {
             ST_SetSRID(ST_MakePoint(${dto.longitude}, ${dto.latitude}), 4326), 
             CAST(${dto.isActive} AS BOOLEAN), 
             ${user.id}, 
-            NOW()
+            NOW(),
+            ${dto.title + dto.address}
           ) 
           RETURNING id
         `;
@@ -168,6 +166,9 @@ export class RealEstateService {
         SET coordinates = ST_SetSRID(ST_MakePoint(${dto.longitude}, ${dto.latitude}), 4326)
         WHERE id = ${existingRealEstate.id} AND owner_id = ${user.id}
       `;
+
+      delete dto.longitude;
+      delete dto.latitude;
     }
 
     if (dto.deletedPhotos !== null && dto.deletedPhotos !== undefined && dto.deletedPhotos.length) {
