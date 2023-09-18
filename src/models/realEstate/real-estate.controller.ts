@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { RealEstateService } from './real-estate.service';
 import { QueryDto } from '../shared/dto';
-import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, UpdatePhotosDto } from './dto';
+import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, SearchRealEstateDto, UpdatePhotosDto } from './dto';
 import { GetUser } from '../../auth/decorator';
 import { JwtGuard } from '../../auth/guard';
 import { FormDataRequest } from 'nestjs-form-data';
@@ -41,6 +41,12 @@ export class RealEstateController {
   @Get(':id')
   getRealEstateById(@Param('id', ParseIntPipe) id: number) {
     return this.realEstateService.getRealEstateById(id);
+  }
+
+  @Get('search')
+  @UseInterceptors(new TypeIdCheckInterceptor(1))
+  searchRealEstates(@Query() query: SearchRealEstateDto) {
+    return this.realEstateService.searchRealEstates(query);
   }
 
   @Post()

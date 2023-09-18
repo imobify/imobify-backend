@@ -8,7 +8,7 @@ import {
 import { PrismaService } from '../../shared/prisma/prisma.service';
 import { ImageService } from '../../shared/image/image.service';
 import { QueryDto } from '../shared/dto';
-import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, UpdatePhotosDto } from './dto';
+import { CreateRealEstateDto, EditRealEstateDto, GetNearDto, SearchRealEstateDto, UpdatePhotosDto } from './dto';
 import { MemoryStoredFile } from 'nestjs-form-data';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
@@ -56,6 +56,32 @@ export class RealEstateService {
         owner_id: user.id,
       },
     });
+
+    return realEstates;
+  }
+
+  async searchRealEstates(query: SearchRealEstateDto) {
+    const realEstates = await this.prisma.$queryRaw`
+      SELECT
+        r.id,
+        r.title,
+        (
+          SELECT
+            rp."photoUrl"
+          FROM
+            real_estate_photo rp
+          WHERE
+            rp."realEstate_id" = r.id
+          ORDER BY
+            rp.id DESC
+          LIMIT 1
+        )
+      FROM
+        real_estate r
+      ORDER BY
+        SIMILARITY(${query.q}, search) DESC
+      LIMIT 20
+    `;
 
     return realEstates;
   }
