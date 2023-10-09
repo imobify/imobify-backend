@@ -29,9 +29,9 @@ export class RealEstateService {
   async getPaginatedRealEstates(query: QueryDto, user: AuthUser) {
     const realEstates = await this.prisma.realEstate.findMany({
       take: query.take ? query.take : 20,
-      skip: 0,
+      skip: query.cursor ? 1 : 0,
       cursor: {
-        id: query.cursor ? query.cursor : user.realEstate[0].id ? user.realEstate[0]?.id : 1,
+        id: query.cursor ? query.cursor : user.realEstate[0]?.id ? user.realEstate[0]?.id : 0,
       },
       select: {
         id: true,

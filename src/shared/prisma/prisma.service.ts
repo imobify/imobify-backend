@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 import { Coordinates } from './types';
 
@@ -13,18 +12,16 @@ function getExtendedClient(baseClient: PrismaService) {
               id,
               ST_X(coordinates::geometry) AS longitude,
               ST_Y(coordinates::geometry) AS latitude,
-              ROUND(
-                ST_Distance(
-                  coordinates::geography,
-                  ST_SetSRID(ST_MakePoint(${coords.longitude}, ${coords.latitude}), 4326)::geography
-              ) / 1000) AS distance
+              ST_Distance(
+                coordinates::geography, 
+                ST_SetSRID(ST_MakePoint(${coords.longitude}, ${coords.latitude}), 4326)::geography) AS distance
             FROM
               real_estate
             WHERE
               ST_DWithin(
-                coordinates,
                 ST_SetSRID(ST_MakePoint(${coords.longitude}, ${coords.latitude}), 4326),
-                ${maxDistance}
+                ST_SetSRID(ST_MakePoint(ST_X(coordinates::geometry), ST_Y(coordinates::geometry)), 4326),
+                ${maxDistance} / (111.32 * 1000)
               )
               AND "isActive" IS TRUE
             ORDER BY distance ASC;
@@ -57,11 +54,11 @@ function getExtendedClient(baseClient: PrismaService) {
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-  constructor(config: ConfigService) {
+  constructor() {
     super({
       datasources: {
         db: {
-          url: config.get('DATABASE_URL'),
+          url: process.env.DATABASE_URL,
         },
       },
     });

@@ -10,9 +10,9 @@ export class FavoriteService {
   async getPaginated(query: QueryDto, user: AuthUser) {
     const favorites = await this.prisma.favorite.findMany({
       take: query.take ? query.take : 20,
-      skip: 0,
+      skip: query.cursor ? 1 : 0,
       cursor: {
-        id: query.cursor ? query.cursor : user.favorites[0].id ? user.favorites[0].id : 1,
+        id: query.cursor ? query.cursor : user.favorites[0].id ? user.favorites[0].id : 0,
       },
       select: {
         id: true,

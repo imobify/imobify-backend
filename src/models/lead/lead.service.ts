@@ -15,9 +15,9 @@ export class LeadService {
 
       const leads = await this.prisma.lead.findMany({
         take: query.take ? query.take : 20,
-        skip: 0,
+        skip: query.cursor ? 1 : 0,
         cursor: {
-          id: query.cursor ? query.cursor : user.leads[0].id,
+          id: query.cursor ? (query.cursor ? user.leads[0].id : user.leads[0].id) : 0,
         },
         include: {
           realEstate: {
@@ -53,7 +53,7 @@ export class LeadService {
 
       const leads = await this.prisma.lead.findMany({
         take: query.take ? query.take : 20,
-        skip: 0,
+        skip: query.cursor ? 1 : 0,
         include: {
           author: {
             select: {
@@ -66,7 +66,7 @@ export class LeadService {
         },
         where: {
           id: {
-            gte: query.cursor ? query.cursor : 1,
+            gte: query.cursor ? query.cursor : 0,
           },
           realEstate: {
             owner_id: user.id,
