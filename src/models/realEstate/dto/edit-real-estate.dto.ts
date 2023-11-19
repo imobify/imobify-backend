@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateRealEstateDto } from './create-real-estate.dto';
-import { IsArray, IsOptional } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class EditRealEstateDto extends PartialType(CreateRealEstateDto) {
@@ -8,4 +8,8 @@ export class EditRealEstateDto extends PartialType(CreateRealEstateDto) {
   @Transform(({ value }) => JSON.parse(value))
   @IsArray()
   deletedPhotos?: string[];
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

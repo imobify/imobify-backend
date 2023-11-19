@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, IsNumber, IsOptional, Min, IsBoolean } from 'clas
 import { HasMimeType, IsFiles, MaxFileSize, MemoryStoredFile } from 'nestjs-form-data';
 export class CreateRealEstateDto {
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   title: string;
 
   @IsString()

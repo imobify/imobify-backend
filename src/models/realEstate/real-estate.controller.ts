@@ -38,15 +38,15 @@ export class RealEstateController {
     return this.realEstateService.getNear(query);
   }
 
-  @Get(':id')
-  getRealEstateById(@Param('id', ParseIntPipe) id: number) {
-    return this.realEstateService.getRealEstateById(id);
-  }
-
   @Get('search')
   @UseInterceptors(new TypeIdCheckInterceptor(1))
   searchRealEstates(@Query() query: SearchRealEstateDto) {
     return this.realEstateService.searchRealEstates(query);
+  }
+
+  @Get(':id')
+  getRealEstateById(@Param('id', ParseIntPipe) id: number) {
+    return this.realEstateService.getRealEstateById(id);
   }
 
   @Post()
@@ -59,7 +59,11 @@ export class RealEstateController {
   @Patch(':id')
   @UseInterceptors(new TypeIdCheckInterceptor(2))
   @FormDataRequest()
-  editRealEstate(@Param('id', ParseIntPipe) realEstateId: number, @GetUser() user, @Body() dto: EditRealEstateDto) {
+  editRealEstate(
+    @Param('id', ParseIntPipe) realEstateId: number,
+    @GetUser() user: AuthUser,
+    @Body() dto: EditRealEstateDto
+  ) {
     return this.realEstateService.editRealEstate(dto, user, realEstateId);
   }
 

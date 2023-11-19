@@ -80,7 +80,7 @@ export class RealEstateService {
         real_estate r
       ORDER BY
         SIMILARITY(${query.q}, search) DESC
-      LIMIT 20
+      LIMIT 5
     `;
 
     return realEstates;
@@ -229,6 +229,16 @@ export class RealEstateService {
         photoUrl: true,
       },
     });
+
+    if (dto.title) {
+      if (dto.address) {
+        dto.search = `${dto.title}${dto.address}`;
+      }
+
+      dto.search = `${dto.title}${existingRealEstate.address}`;
+    } else if (dto.address) {
+      dto.search = `${existingRealEstate.title}${dto.address}`;
+    }
 
     const updatedRealEstate = await this.prisma.postgis.realEstate.update({
       data: {
