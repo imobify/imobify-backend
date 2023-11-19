@@ -6,7 +6,7 @@ import { MemoryStoredFile } from 'nestjs-form-data';
 
 @Injectable()
 export class ImageService {
-  uploadFileToCloudinary(file: MemoryStoredFile): Promise<CloudinaryResponse> {
+  uploadFileToCloudinary(file: MemoryStoredFile | Express.Multer.File): Promise<CloudinaryResponse> {
     return new Promise<CloudinaryResponse>((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
         if (error) return reject(error);

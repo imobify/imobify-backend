@@ -9,6 +9,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard } from '../../auth/guard';
@@ -17,6 +18,7 @@ import { EditUserDto, UploadAvatarDto } from './dto';
 import { CheckUserIdInterceptor } from '../../auth/interceptor';
 import { FormDataRequest } from 'nestjs-form-data';
 import { AuthUser } from '../../auth/dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(JwtGuard)
 @Controller('users')
@@ -30,9 +32,9 @@ export class UserController {
 
   @Post(':id/avatar')
   @UseInterceptors(CheckUserIdInterceptor)
-  @FormDataRequest()
-  uploadAvatar(@GetUser('id') userId: string, dto: UploadAvatarDto) {
-    return this.userService.uploadAvatar(dto, userId);
+  @UseInterceptors(FileInterceptor('avatar'))
+  uploadAvatar(@GetUser('id') userId: string, @UploadedFile() avatar: Express.Multer.File) {
+    return this.userService.uploadAvatar(avatar, userId);
   }
 
   @Patch(':id')

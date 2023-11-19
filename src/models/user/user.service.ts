@@ -64,8 +64,8 @@ export class UserService {
     }
   }
 
-  async uploadAvatar(dto: UploadAvatarDto, userId: string) {
-    const imageResponse = await this.imageService.uploadFileToCloudinary(dto.avatar);
+  async uploadAvatar(avatar: Express.Multer.File, userId: string) {
+    const imageResponse = await this.imageService.uploadFileToCloudinary(avatar);
 
     const user = await this.prisma.user.findUnique({
       where: {
@@ -77,7 +77,7 @@ export class UserService {
       await this.imageService.deleteFileFromCloudinary(user.avatar_public_id);
     }
 
-    await this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
       },
@@ -87,7 +87,7 @@ export class UserService {
       },
     });
 
-    return { avatar_url: user.avatar_url };
+    return { avatar_url: updatedUser.avatar_url };
   }
 
   async deleteUser(user: AuthUser) {
