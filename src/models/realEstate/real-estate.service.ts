@@ -106,6 +106,12 @@ export class RealEstateService {
             avatar_url: true,
           },
         },
+        leads: {
+          select: {
+            id: true,
+            author_id: true,
+          },
+        },
       },
     });
 
