@@ -78,6 +78,8 @@ export class RealEstateService {
         )
       FROM
         real_estate r
+      WHERE
+          r."isActive" is TRUE
       ORDER BY
         SIMILARITY(${query.q}, search) DESC
       LIMIT 5
