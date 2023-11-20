@@ -17,7 +17,7 @@ export class LeadService {
         take: query.take ? query.take : 20,
         skip: query.cursor ? 1 : 0,
         cursor: {
-          id: query.cursor ? (query.cursor ? user.leads[0].id : user.leads[0].id) : 0,
+          id: query.cursor ? query.cursor : user.leads[0]?.id ? user.leads[0]?.id : 0,
         },
         include: {
           realEstate: {
@@ -61,6 +61,11 @@ export class LeadService {
               email: true,
               phone: true,
               avatar_url: true,
+            },
+          },
+          realEstate: {
+            select: {
+              title: true,
             },
           },
         },
