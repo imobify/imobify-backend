@@ -36,7 +36,7 @@ export class FavoriteController {
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete()
+  @Delete(':id')
   deleteFavorite(@GetUser() user: AuthUser, @Param('id') favoriteId: number) {
     return this.favoriteService.deleteFavorite(user, favoriteId);
   }

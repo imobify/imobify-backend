@@ -12,12 +12,13 @@ export class FavoriteService {
       take: query.take ? query.take : 20,
       skip: query.cursor ? 1 : 0,
       cursor: {
-        id: query.cursor ? query.cursor : user.favorites[0].id ? user.favorites[0].id : 0,
+        id: query.cursor ? query.cursor : user.favorites[0]?.id ? user.favorites[0]?.id : 0,
       },
       select: {
         id: true,
         realEstate: {
           select: {
+            id: true,
             title: true,
             address: true,
             photos: {
@@ -34,6 +35,9 @@ export class FavoriteService {
       },
       where: {
         author_id: user.id,
+        realEstate: {
+          isActive: true,
+        },
       },
     });
 

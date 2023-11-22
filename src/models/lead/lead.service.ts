@@ -75,6 +75,7 @@ export class LeadService {
           },
           realEstate: {
             owner_id: user.id,
+            isActive: true,
           },
         },
       });
