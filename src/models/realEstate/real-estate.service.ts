@@ -112,6 +112,12 @@ export class RealEstateService {
             author_id: true,
           },
         },
+        favorites: {
+          select: {
+            id: true,
+            author_id: true,
+          },
+        },
       },
     });
 
