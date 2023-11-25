@@ -80,6 +80,7 @@ export class RealEstateService {
         real_estate r
       WHERE
           r."isActive" is TRUE
+          AND SIMILARITY(${query.q}, r.search) > 0.02
       ORDER BY
         SIMILARITY(${query.q}, search) DESC
       LIMIT 5
