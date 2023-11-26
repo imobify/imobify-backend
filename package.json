@@ -25,7 +25,7 @@
     "prettier:write": "prettier --write ./**/*.{ts,js,json,*rc}",
     "prisma:dev:deploy": "prisma migrate deploy",
     "prisma:test:deploy": "dotenv -e .env.test -- prisma migrate deploy",
-    "start": "nest start",
+    "start": "npm run deploy",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/src/main",
