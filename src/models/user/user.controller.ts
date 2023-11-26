@@ -14,9 +14,8 @@ import {
 import { UserService } from './user.service';
 import { JwtGuard } from '../../auth/guard';
 import { GetUser } from '../../auth/decorator';
-import { EditUserDto, UploadAvatarDto } from './dto';
+import { EditUserDto } from './dto';
 import { CheckUserIdInterceptor } from '../../auth/interceptor';
-import { FormDataRequest } from 'nestjs-form-data';
 import { AuthUser } from '../../auth/dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 

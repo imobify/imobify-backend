@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/com
 import * as argon from 'argon2';
 import { ImageService } from '../../shared/image/image.service';
 import { PrismaService } from '../../shared/prisma/prisma.service';
-import { EditUserDto, UploadAvatarDto } from './dto';
+import { EditUserDto } from './dto';
 import { AuthUser } from '../../auth/dto';
 
 @Injectable()
